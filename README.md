@@ -1,4 +1,4 @@
-# pflaum_capstone
+# Pflaum Capstone: Renewable Energy Generation and Carbon Emissions in the U.S.
 Objective: Final YSE EDS Capstone focusing on the relationship between renewable energy growth and carbon emissions decline in the US over the course of the 21st century.
 ## Data Collection
 - ** Period: 2000 - 2025**
