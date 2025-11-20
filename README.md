@@ -2,8 +2,8 @@
 Objective: Final YSE EDS Capstone focusing on the relationship between renewable energy growth and carbon emissions decline in the US over the course of the 21st century.
 ## Data Collection
 - ** Period: 2000 - 2025**
-- ** Sites: Contiguous United States**
-- ** Frequency: Quarterly**
+- ** Sites: United States**
+- ** Frequency: Monthly**
 - ** Instruments: State, local, and federal electricity generation sites; carbon emissions trackers nationally
 ## File Organization
 - ** analysis/ - R scripts in Jupyter notebook
