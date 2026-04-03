@@ -33,8 +33,6 @@ us-renewable-energy-emissions/
 │   ├── fig1_renewable_growth.png           ← Renewable generation over time
 │   ├── fig2_fossil_trend.png               ← Fossil generation (emissions proxy)
 │   └── fig3_relationship.png               ← Renewable share vs fossil generation
-│
-├── outputs/
 │   └── key_findings.md                     ← Concise interpretation of results
 │
 └── LICENSE.md
