@@ -1,1 +1,77 @@
+# Load required libraries
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
 
+# -------------------------
+# LOAD DATA
+# -------------------------
+df <- read_excel("data/EDS Monthly energy generation.xlsx")
+
+# -------------------------
+# CLEANING
+# -------------------------
+# Trim column names
+names(df) <- trimws(names(df))
+
+# Aggregate yearly generation by source
+yearly <- df %>%
+  group_by(YEAR, `ENERGY SOURCE`) %>%
+  summarise(GENERATION = sum(`GENERATION (Megawatthours)`), .groups = 'drop')
+
+# Pivot so each energy source is a column
+pivot <- yearly %>%
+  pivot_wider(names_from = `ENERGY SOURCE`, values_from = GENERATION, values_fill = 0)
+
+# -------------------------
+# DEFINE ENERGY GROUPS
+# -------------------------
+renewables <- c("Wind", "Solar Thermal and Photovoltaic", "Hydroelectric Conventional",
+                "Geothermal", "Biomass")
+fossil <- c("Coal", "Petroleum", "Natural Gas")
+
+# Create totals
+pivot <- pivot %>%
+  mutate(
+    Renewable_Total = rowSums(across(all_of(renewables))),
+    Fossil_Total = rowSums(across(all_of(fossil))),
+    Total_Generation = Renewable_Total + Fossil_Total,
+    Renewable_Share = Renewable_Total / Total_Generation
+  )
+
+# -------------------------
+# FIGURE 1: Renewable Growth
+# -------------------------
+ggplot(pivot, aes(x = YEAR, y = Renewable_Total)) +
+  geom_line(color = "forestgreen", size = 1) +
+  labs(title = "Renewable Electricity Generation (U.S.)",
+       x = "Year",
+       y = "Megawatt-hours") +
+  theme_minimal()
+ggsave("renewable_growth.png", width = 8, height = 5)
+
+# -------------------------
+# FIGURE 2: Fossil Generation (Emissions Proxy)
+# -------------------------
+ggplot(pivot, aes(x = YEAR, y = Fossil_Total)) +
+  geom_line(color = "firebrick", size = 1) +
+  labs(title = "Fossil Fuel Electricity Generation (Emissions Proxy)",
+       x = "Year",
+       y = "Megawatt-hours") +
+  theme_minimal()
+ggsave("fossil_trend.png", width = 8, height = 5)
+
+# -------------------------
+# FIGURE 3: Relationship
+# -------------------------
+ggplot(pivot, aes(x = Renewable_Share, y = Fossil_Total)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE, color = "blue") +
+  labs(title = "Renewable Share vs Fossil Generation",
+       x = "Renewable Share",
+       y = "Fossil Generation") +
+  theme_minimal()
+ggsave("relationship.png", width = 8, height = 5)
+
+print("All figures created successfully.")
